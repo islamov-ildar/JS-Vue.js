@@ -1,0 +1,24 @@
+* {
+    font-family: 'Europe Normal', arial;
+}
+.product-item {
+    border: solid darkslateblue 3px;
+    border-radius: 5px;
+    padding: 10px;
+    width: 375px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.btn-cart {
+    font-size: 2em;
+    width: 250px;
+    height: 50px;
+    margin: 20px 0;
+}
+.buy-btn {
+    font-size: 1.1em;
+    font-weight: bold;
+    width: 200px;
+    height: 50px;
+}
