@@ -23,3 +23,5 @@ const renderProducts = list => {
 };
 
 renderProducts(products);
+
+//Попытка упростить запись функции не увенчалась успехом.
