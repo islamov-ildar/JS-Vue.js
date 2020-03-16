@@ -92,3 +92,4 @@ class ProductInCart extends ProductItem {
 
 //let myCart = new Cart();
 
+//Пункты 1 и 2 дз
