@@ -1,3 +1,28 @@
+const API = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+
+
+let getRequest = (url) => {
+    return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status !== 200) {
+                    reject('Error');
+                } else {
+                    resolve(xhr.responseText);
+                }
+            }
+        };
+        xhr.send();
+    });
+};
+
+getRequest (`${API}/catalogData.json`).then(
+    data => {console.log(data)},
+    error => {console.log(error)}
+);
+
 class ProductList {
     constructor(container = '.products') {
         this.container = container;
@@ -5,8 +30,7 @@ class ProductList {
         this.allProducts = [];
         this._fetchProducts();
         this._render();
-        this.totalSum = 0;
-        this.totalSumCalc();
+        //this.totalSumCalc();
     }
 
     _fetchProducts() {
@@ -29,11 +53,8 @@ class ProductList {
 
     //Определяем суммарную стоимость товаров на странице
 
-    totalSumCalc() {
-        for (let product of this.goods) {
-            this.totalSum += product.price;
-        }
-        console.log(`Стоимость всех товаров на странице равна: ${this.totalSum}`);
+    calcSum() {
+        return this.allProducts.reduce((accum, item) => accum += item.price, 0);
     }
 }
 
