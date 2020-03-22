@@ -1,6 +1,17 @@
 * {
     font-family: 'Europe Normal', arial;
 }
+header {
+    width: 100%;
+    height: 90px;
+    margin-bottom: 10px;
+    border: solid darkslateblue 3px;
+    border-radius: 5px;
+}
+.btn-cart {
+    position: absolute;
+    left: 88%;
+}
 .product-item {
     border: solid darkslateblue 3px;
     border-radius: 5px;
