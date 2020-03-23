@@ -1,6 +1,6 @@
 const API = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
 
-
+//Задание 1
 let getRequest = (url) => {
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
@@ -18,6 +18,7 @@ let getRequest = (url) => {
     });
 };
 
+//Задание 2
 class List {
     constructor(url, container, list = listContext) {
         this.container = container;
@@ -32,19 +33,21 @@ class List {
     getJson(url){
         return fetch(url ? url : `${API + this.url}`)
             .then(result => result.json())
-            .catch(error => console.log(error));
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     handleData(data){
         this.goods = [...data];
-        this._render();
+        this.render();
     }
 
     calcSum() {
         return this.allProducts.reduce((accum, item) => accum += item.price, 0);
     }
 
-    _render() {
+    render() {
         const block = document.querySelector(this.container);
         for (let product of this.goods) {
             console.log(this.constructor.name);
@@ -58,26 +61,38 @@ class List {
     _init(){
         return false
     }
-    filter(){
-        return false
+    filter(value){
+        const regexp = new RegExp(value, 'i');
+        this.filtered = this.allProducts.filter(product => regexp.test(product.product_name));
+        this.allProducts.forEach(el => {
+            const block = document.querySelector(`.product-item[data-id="${el.id_product}"]`);
+            if(!this.filtered.includes(el)){
+                block.classList.add('invisible');
+            } else {
+                block.classList.remove('invisible');
+            }
+        })
     }
 
 }
 
 class Item {
-    constructor(product, img='images/ico.png') {
-        this.title = product.product_name;
-        this.price = product.price;
-        this.id = product.id_product;
+    constructor(el, img='images/ico.png') {
+        this.product_name = el.product_name;
+        this.price = el.price;
+        this.id_product = el.id_product;
         this.img = img;
     }
 
     render() {
-        return `<div class="product-item" data-id="${this.id}">
+        return `<div class="product-item" data-id="${this.id_product}">
             <div class="product-description">
-            <h3>${this.title}</h3>
+            <h3>${this.product_name}</h3>
             <p><h3>${this.price}</h3></p>
-            <button class="buy-btn">Добавить в корзину</button>
+            <button class="buy-btn" 
+            data-id="${this.id_product}"
+            data-name="${this.product_name}"
+            data-price="${this.price}">Добавить в корзину</button>
             </div>
             <div class="product-img"><img src= ${this.img} alt="product-photo"></div>    
             </div>`;
@@ -86,7 +101,7 @@ class Item {
 }
 
 class ProductList extends List{
-    constructor(cart, container = '.products', url = '/catalogData.json') {
+    constructor(cart, container = '.products', url = "/catalogData.json") {
         super(url, container);
         this.cart = cart;
         this.getJson().then(data => this.handleData(data));
@@ -107,9 +122,12 @@ class ProductList extends List{
 class ProductItem extends Item{}
 
 class Cart extends List{
-    constructor(container = ".cart-block", url = "getBasket.json"){
+    constructor(container = ".cart-block", url = "/getBasket.json"){
         super(url, container);
-        this.getJson().then(data => this.handleData(data.contents));
+        this.getJson()
+            .then(data => {
+                this.handleData(data.contents);
+            });
     }
 
     addProduct(element){
@@ -117,7 +135,7 @@ class Cart extends List{
             .then(data => {
                 if(data.result === 1){
                     let productId = +element.dataset['id'];
-                    let find = this.allProducts.find(product => product.id_product ===productId);
+                    let find = this.allProducts.find(product => product.id_product === productId);
                     if(find){
                         find.quantity++;
                         this._updateCart(find);
@@ -142,7 +160,7 @@ class Cart extends List{
             .then(data => {
                 if(data.result === 1){
                     let productId = +element.dataset['id'];
-                    let find = this.allProducts.find(product => product.id_product ===productId);
+                    let find = this.allProducts.find(product => product.id_product === productId);
                     if(find.quantity > 1){
                         find.quantity--;
                         this._updateCart(find);
@@ -176,19 +194,19 @@ class Cart extends List{
 }
 
 class CartItem extends Item{
-    constructor(product, img='images/ico.png') {
-        super(product, img);
-        this.quantity = product.quantity;
+    constructor(el, img='images/ico.png') {
+        super(el, img);
+        this.quantity = el.quantity;
     }
     render(){
         return `<div class="product-item" data-id="${this.id_product}">
             <div class="product-description">
-            <h3>${this.title}</h3>
+            <h3>${this.product_name}</h3>
             <p><h3>${this.price}</h3></p>
             <p><h3>Количество: ${this.quantity}</h3></p>
             <p><h3>${this.price} за ед.</h3></p>
             <p><h3>${this.price*this.quantity} RUR.</h3></p>
-            <button class="del-btn" data-id = "${this.id_product}">&times;</button>
+            <button class="del-btn" data-id = "${this.id_product}">x</button>
             </div>
             <div class="product-img"><img src= ${this.img} alt="product-photo"></div>    
             </div>`;
@@ -200,7 +218,8 @@ const listContext = {
   Cart: CartItem
 };
 
-let myProductList = new ProductList();
+let cart = new Cart;
+let products = new ProductList(cart);
 
 
 /*
