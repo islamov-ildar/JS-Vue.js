@@ -58,12 +58,15 @@ class List {
         }
     }
 
+
+
     _init(){
         return false
     }
     filter(value){
         const regexp = new RegExp(value, 'i');
         this.filtered = this.allProducts.filter(product => regexp.test(product.product_name));
+        console.log(this.filtered);
         this.allProducts.forEach(el => {
             const block = document.querySelector(`.product-item[data-id="${el.id_product}"]`);
             if(!this.filtered.includes(el)){
@@ -84,7 +87,7 @@ class Item {
         this.img = img;
     }
 
-    render() {
+    render() { //Здесь поправить product-item на cart-item и в остальных местах для работоспостобности поиска
         return `<div class="product-item" data-id="${this.id_product}">
             <div class="product-description">
             <h3>${this.product_name}</h3>
