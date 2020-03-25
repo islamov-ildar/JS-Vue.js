@@ -34,7 +34,7 @@ class List {
         return fetch(url ? url : `${API + this.url}`)
             .then(result => result.json())
             .catch(error => {
-                console.log(error);
+               // console.log(error);
             })
     }
 
@@ -50,9 +50,9 @@ class List {
     render() {
         const block = document.querySelector(this.container);
         for (let product of this.goods) {
-            console.log(this.constructor.name);
+           // console.log(this.constructor.name);
             const productObject = new this.list[this.constructor.name](product);
-            console.log(productObject);
+           // console.log(productObject);
             this.allProducts.push(productObject);
             block.insertAdjacentHTML('beforeend', productObject.render());
         }
@@ -136,6 +136,7 @@ class Cart extends List{
                 if(data.result === 1){
                     let productId = +element.dataset['id'];
                     let find = this.allProducts.find(product => product.id_product === productId);
+                    console.log(find);
                     if(find){
                         find.quantity++;
                         this._updateCart(find);
@@ -166,7 +167,7 @@ class Cart extends List{
                         this._updateCart(find);
                     } else {
                         this.allProducts.splice(this.allProducts.indexOf(find), 1);
-                        document.querySelector(`.cart-item[data-id="${productId}"]`).remove();
+                        document.querySelector(`.product-item[data-id="${productId}"]`).remove();
                     }
                 } else {
                     alert('Error');
@@ -175,7 +176,9 @@ class Cart extends List{
     }
 
     _updateCart(product){
-        let block = document.querySelector(`.cart-item[data-id="${product.id_product}"]`);
+        console.log(product);
+        let block = document.querySelector(`.product-item[data-id="${product.id_product}"]`);
+        console.log(block);
         block.querySelector('.product-quantity').textContent = `Количество: ${product.quantity}`;
         block.querySelector('.product-price').textContent = `${product.quantity*product.price} RUR`;
 
@@ -202,10 +205,9 @@ class CartItem extends Item{
         return `<div class="product-item" data-id="${this.id_product}">
             <div class="product-description">
             <h3>${this.product_name}</h3>
-            <p><h3>${this.price}</h3></p>
-            <p><h3>Количество: ${this.quantity}</h3></p>
             <p><h3>${this.price} за ед.</h3></p>
-            <p><h3>${this.price*this.quantity} RUR.</h3></p>
+            <p><h3 class="product-quantity">Количество: ${this.quantity}</h3></p>         
+            <p><h3 class="product-price">${this.price*this.quantity} RUR.</h3></p>
             <button class="del-btn" data-id = "${this.id_product}">x</button>
             </div>
             <div class="product-img"><img src= ${this.img} alt="product-photo"></div>    
