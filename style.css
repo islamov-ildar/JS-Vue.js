@@ -14,7 +14,7 @@ header {
     position: relative;
     background: #bdbdbd;
 }
-.product-item .cart-item {
+.product-item, .cart-item  {
     border: solid darkslateblue 3px;
     border-radius: 5px;
     padding: 10px;

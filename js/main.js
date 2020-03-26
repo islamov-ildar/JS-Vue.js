@@ -58,8 +58,6 @@ class List {
         }
     }
 
-
-
     _init(){
         return false
     }
@@ -87,7 +85,7 @@ class Item {
         this.img = img;
     }
 
-    render() { //Здесь поправить product-item на cart-item и в остальных местах для работоспостобности поиска
+    render() {
         return `<div class="product-item" data-id="${this.id_product}">
             <div class="product-description">
             <h3>${this.product_name}</h3>
@@ -170,7 +168,7 @@ class Cart extends List{
                         this._updateCart(find);
                     } else {
                         this.allProducts.splice(this.allProducts.indexOf(find), 1);
-                        document.querySelector(`.product-item[data-id="${productId}"]`).remove();
+                        document.querySelector(`.cart-item[data-id="${productId}"]`).remove();
                     }
                 } else {
                     alert('Error');
@@ -180,7 +178,7 @@ class Cart extends List{
 
     _updateCart(product){
         console.log(product);
-        let block = document.querySelector(`.product-item[data-id="${product.id_product}"]`);
+        let block = document.querySelector(`.cart-item[data-id="${product.id_product}"]`);
         console.log(block);
         block.querySelector('.product-quantity').textContent = `Количество: ${product.quantity}`;
         block.querySelector('.product-price').textContent = `${product.quantity*product.price} RUR`;
@@ -205,7 +203,7 @@ class CartItem extends Item{
         this.quantity = el.quantity;
     }
     render(){
-        return `<div class="product-item" data-id="${this.id_product}">
+        return `<div class="cart-item" data-id="${this.id_product}">
             <div class="product-description">
             <h3>${this.product_name}</h3>
             <p><h3>${this.price} за ед.</h3></p>
