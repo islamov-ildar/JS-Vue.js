@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="raw-text">
+    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+    One: 'How are you doing?'    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+    Two: 'I'm doing alright. How about you?'    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+    One: 'Not too bad. The weather is great isn't it?'    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+    Two: 'Yes. It's absolutely beautiful today.'    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+    One: 'I wish it was like this more frequently.'    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+    Two: 'Me too.'    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+    One: 'So where are you going now?'    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+    Two: 'I'm going to meet a friend of mine at the department store'    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+    One: 'Going to do a little shopping?'    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+    Two: 'Yeah, I have to buy some presents for my parents.'    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+    One: 'What's the occasion?'    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+    Two: 'It's their anniversary.'    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+    One: 'That's great. Well, you better get going. You don't want to be late.'    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+    Two: 'I'll see you next time.'    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+    One: 'Sure.' Bye.'    One: 'Hi Mary.' Two: 'Oh, hi.' <br>
+</div>
+<div id="finished-text"></div>
+<button id="replace-btn">Replace</button>
+<script src="js/textHandler.js"></script>
+<script>
+    window.onload = () => {
+        document.getElementById('replace-btn').addEventListener('click', () => {
+            let textHandlerObj = new textHandler('raw-text', 'finished-text');
+            textHandlerObj.handler();
+        });
+    };
+</script>
+</body>
+</html>
