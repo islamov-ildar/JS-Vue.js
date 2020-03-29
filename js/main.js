@@ -7,6 +7,7 @@ const app = new Vue({
         products: [],
         imgCatalog: 'images/ico.png',
         searchLine: '',
+        filtered: []
     },
     methods: {
         getJson(url){
