@@ -7,6 +7,38 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div id="app">
+<header>
+    <div class="cart">
+        <form action="" class="search-form" :submit.prevent="filterGoods()">
+            <input type="text" class="search-field" v-model="searchLine">
+            <button class="btn-search" type="submit" ><i class="fas fa-search"></i></button>
+        </form>
+        <button class="btn-cart" type="button">Корзина</button>
+        <div class="cart-block invisible"></div>
+    </div>
+</header>
+<main>
+    <div class="products">
+        <div class="product-item" v-for="product of products" :key="product.id_product">
+            <img :src="imgCatalog" alt="Some img">
+            <div class="desc">
+                <h3>{{product.product_name}}</h3>
+                <p>{{product.price}}RUB</p>
+                <button class="buy-btn" @click="addProduct(product)">Купить</button>
+            </div>
+        </div>
+    </div>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://kit.fontawesome.com/572ec8678c.js" crossorigin="anonymous"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
+
+<!--
+
 <header>
     <div class="cart">
         <form action="" class="search-form">
@@ -19,8 +51,4 @@
 </header>
 <main>
     <div class="products"></div>
-</main>
-<script src="https://kit.fontawesome.com/572ec8678c.js" crossorigin="anonymous"></script>
-<script src="js/main.js"></script>
-</body>
-</html>
+</main>-->

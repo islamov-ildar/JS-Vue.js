@@ -1,5 +1,54 @@
 const API = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
 
+const app = new Vue({
+    el: '#app',
+    data: {
+        catalogUrl: '/catalogData.json',
+        products: [],
+        imgCatalog: 'images/ico.png',
+        searchLine: '',
+    },
+    methods: {
+        getJson(url){
+            return fetch(url)
+                .then(result => result.json())
+                .catch(error => {
+                    console.log(error);
+                })
+        },
+        addProduct(product){
+            console.log(product.id_product);
+        },
+        filterGoods() {
+            console.log(this.searchLine);
+            const regexp = new RegExp(this.searchLine, 'i');
+            this.filtered = this.products.filter(product => regexp.test(product.product_name));
+            console.log(this.filtered);
+            this.products.forEach(el => {
+                const block = document.querySelector(`.product-item[data-id="${el.id_product}"]`);
+                if(!this.filtered.includes(el)){
+                    block.classList.add('invisible');
+                } else {
+                    block.classList.remove('invisible');
+                }
+            })
+
+        }
+    },
+    mounted(){
+        this.getJson(`${API + this.catalogUrl}`)
+            .then(data => {
+                for(let el of data){
+                    this.products.push(el);
+                }
+            });
+    }
+});
+
+
+/*
+const API = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+
 //Задание 1
 let getRequest = (url) => {
     return new Promise((resolve, reject) => {
@@ -223,6 +272,7 @@ const listContext = {
 
 let cart = new Cart;
 let products = new ProductList(cart);
+*/
 
 
 /*
