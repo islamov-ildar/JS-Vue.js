@@ -1,5 +1,84 @@
 const API = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
 
+const app = new Vue({
+    el: '#app',
+    data: {
+        catalogUrl: '/catalogData.json',
+        products: [],
+        imgCatalog: 'images/ico.png',
+        searchLine: '',
+        filtered: [],
+        cartItems: [],
+        showCart: false,
+        cartUrl: '/getBasket.json',
+        imgCart: 'images/ico.png'
+    },
+    methods: {
+        getJson(url) {
+            return fetch(url)
+                .then(result => result.json())
+                .catch(error => {
+                    console.log(error);
+                })
+        },
+        addProduct(product) {
+            console.log(product.id_product);
+            this.getJson(`${API}/addToBasket.json`)
+                .then(data => {
+                    if (data.result === 1) {
+                        let find = this.cartItems.find(el => el.id_product === product.id_product);
+                        if (find) {
+                            find.quantity++;
+                        } else {
+                            let prod = Object.assign({quantity: 1}, product);
+                            this.cartItems.push(prod)
+                        }
+                    } else {
+                        alert('error');
+                    }
+                })
+
+        },
+        remove(item) {
+            this.getJson(`${API}/deleteFromBasket.json`)
+                .then(data => {
+                    if (data.result === 1) {
+                        if (item.quantity > 1) {
+                            item.quantity--;
+                        } else {
+                            this.cartItems.splice(this.cartItems.indexOf(item), 1)
+                        }
+                    }
+                })
+        },
+        filter() {
+            let regexp = new RegExp(this.searchLine, 'i');
+            this.filtered = this.products.filter(el => regexp.test(el.product_name))
+        },
+    },
+    mounted(){
+        this.getJson(`${API + this.cartUrl}`)
+            .then(data => {
+                console.log(data);
+                for(let el of data.contents){
+                    this.cartItems.push(el);
+
+                }
+            });
+        this.getJson(`${API + this.catalogUrl}`)
+            .then(data => {
+                for(let el of data){
+                    this.products.push(el);
+                    this.filtered.push(el);
+                }
+            });
+    }
+});
+
+
+/*
+const API = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+
 //Задание 1
 let getRequest = (url) => {
     return new Promise((resolve, reject) => {
@@ -34,7 +113,7 @@ class List {
         return fetch(url ? url : `${API + this.url}`)
             .then(result => result.json())
             .catch(error => {
-                console.log(error);
+               // console.log(error);
             })
     }
 
@@ -50,9 +129,9 @@ class List {
     render() {
         const block = document.querySelector(this.container);
         for (let product of this.goods) {
-            console.log(this.constructor.name);
+           // console.log(this.constructor.name);
             const productObject = new this.list[this.constructor.name](product);
-            console.log(productObject);
+           // console.log(productObject);
             this.allProducts.push(productObject);
             block.insertAdjacentHTML('beforeend', productObject.render());
         }
@@ -64,6 +143,7 @@ class List {
     filter(value){
         const regexp = new RegExp(value, 'i');
         this.filtered = this.allProducts.filter(product => regexp.test(product.product_name));
+        console.log(this.filtered);
         this.allProducts.forEach(el => {
             const block = document.querySelector(`.product-item[data-id="${el.id_product}"]`);
             if(!this.filtered.includes(el)){
@@ -136,6 +216,7 @@ class Cart extends List{
                 if(data.result === 1){
                     let productId = +element.dataset['id'];
                     let find = this.allProducts.find(product => product.id_product === productId);
+                    console.log(find);
                     if(find){
                         find.quantity++;
                         this._updateCart(find);
@@ -175,7 +256,9 @@ class Cart extends List{
     }
 
     _updateCart(product){
+        console.log(product);
         let block = document.querySelector(`.cart-item[data-id="${product.id_product}"]`);
+        console.log(block);
         block.querySelector('.product-quantity').textContent = `Количество: ${product.quantity}`;
         block.querySelector('.product-price').textContent = `${product.quantity*product.price} RUR`;
 
@@ -199,13 +282,12 @@ class CartItem extends Item{
         this.quantity = el.quantity;
     }
     render(){
-        return `<div class="product-item" data-id="${this.id_product}">
+        return `<div class="cart-item" data-id="${this.id_product}">
             <div class="product-description">
             <h3>${this.product_name}</h3>
-            <p><h3>${this.price}</h3></p>
-            <p><h3>Количество: ${this.quantity}</h3></p>
             <p><h3>${this.price} за ед.</h3></p>
-            <p><h3>${this.price*this.quantity} RUR.</h3></p>
+            <p><h3 class="product-quantity">Количество: ${this.quantity}</h3></p>         
+            <p><h3 class="product-price">${this.price*this.quantity} RUR.</h3></p>
             <button class="del-btn" data-id = "${this.id_product}">x</button>
             </div>
             <div class="product-img"><img src= ${this.img} alt="product-photo"></div>    
@@ -220,6 +302,7 @@ const listContext = {
 
 let cart = new Cart;
 let products = new ProductList(cart);
+*/
 
 
 /*
