@@ -7,40 +7,69 @@ const app = new Vue({
         products: [],
         imgCatalog: 'images/ico.png',
         searchLine: '',
-        filtered: []
+        filtered: [],
+        cartItems: [],
+        showCart: false,
+        cartUrl: '/getBasket.json',
+        imgCart: 'images/ico.png'
     },
     methods: {
-        getJson(url){
+        getJson(url) {
             return fetch(url)
                 .then(result => result.json())
                 .catch(error => {
                     console.log(error);
                 })
         },
-        addProduct(product){
+        addProduct(product) {
             console.log(product.id_product);
-        },
-        filterGoods() {
-            console.log(this.searchLine);
-            const regexp = new RegExp(this.searchLine, 'i');
-            this.filtered = this.products.filter(product => regexp.test(product.product_name));
-            console.log(this.filtered);
-            this.products.forEach(el => {
-                const block = document.querySelector(`.product-item[data-id="${el.id_product}"]`);
-                if(!this.filtered.includes(el)){
-                    block.classList.add('invisible');
-                } else {
-                    block.classList.remove('invisible');
-                }
-            })
+            this.getJson(`${API}/addToBasket.json`)
+                .then(data => {
+                    if (data.result === 1) {
+                        let find = this.cartItems.find(el => el.id_product === product.id_product);
+                        if (find) {
+                            find.quantity++;
+                        } else {
+                            let prod = Object.assign({quantity: 1}, product);
+                            this.cartItems.push(prod)
+                        }
+                    } else {
+                        alert('error');
+                    }
+                })
 
-        }
+        },
+        remove(item) {
+            this.getJson(`${API}/deleteFromBasket.json`)
+                .then(data => {
+                    if (data.result === 1) {
+                        if (item.quantity > 1) {
+                            item.quantity--;
+                        } else {
+                            this.cartItems.splice(this.cartItems.indexOf(item), 1)
+                        }
+                    }
+                })
+        },
+        filter() {
+            let regexp = new RegExp(this.searchLine, 'i');
+            this.filtered = this.products.filter(el => regexp.test(el.product_name))
+        },
     },
     mounted(){
+        this.getJson(`${API + this.cartUrl}`)
+            .then(data => {
+                console.log(data);
+                for(let el of data.contents){
+                    this.cartItems.push(el);
+
+                }
+            });
         this.getJson(`${API + this.catalogUrl}`)
             .then(data => {
                 for(let el of data){
                     this.products.push(el);
+                    this.filtered.push(el);
                 }
             });
     }
